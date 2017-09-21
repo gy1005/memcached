@@ -64,6 +64,8 @@
 #endif
 #endif
 
+pthread_mutex_t screen_lock;
+
 /*
  * forward declarations
  */
@@ -4785,8 +4787,10 @@ static int read_into_chunked_item(conn *c) {
 static void drive_machine(conn *c) {
     struct timeval tv;
 	if (c->state == 3 || c->state == 4) {		
-		gettimeofday(&tv, NULL);
-		printf("%llu ", (unsigned long long) (tv.tv_sec * 1000000 + tv.tv_usec));
+        gettimeofday(&tv, NULL);
+        pthread_mutex_lock(&screen_lock);
+        printf("start %llu\n", (unsigned long long) (tv.tv_sec * 1000000 + tv.tv_usec));
+        pthread_mutex_unlock(&screen_lock);
 	}
 	
 	bool stop = false;
@@ -5090,7 +5094,9 @@ static void drive_machine(conn *c) {
 
                 // struct timeval tv;
                 gettimeofday(&tv, NULL);
-                printf("%llu\n", (unsigned long long) (tv.tv_sec * 1000000 + tv.tv_usec));
+                pthread_mutex_lock(&screen_lock);
+                printf("end %llu\n", (unsigned long long) (tv.tv_sec * 1000000 + tv.tv_usec));
+                pthread_mutex_unlock(&screen_lock);
                 fflush(stdout);
                 if (c->state == conn_mwrite) {
                     conn_release_items(c);
@@ -5910,6 +5916,9 @@ static bool _parse_slab_sizes(char *s, uint32_t *slab_sizes) {
 }
 
 int main (int argc, char **argv) {
+
+    pthread_mutex_init(&screen_lock, NULL);
+
     int c;
     bool lock_memory = false;
     bool do_daemonize = false;
