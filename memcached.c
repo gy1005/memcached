@@ -4783,7 +4783,13 @@ static int read_into_chunked_item(conn *c) {
 }
 
 static void drive_machine(conn *c) {
-    bool stop = false;
+    struct timeval tv;
+	if (c->state == 3 || c->state == 4) {		
+		gettimeofday(&tv, NULL);
+		printf("%llu ", (unsigned long long) (tv.tv_sec * 1000000 + tv.tv_usec));
+	}
+	
+	bool stop = false;
     int sfd;
     socklen_t addrlen;
     struct sockaddr_storage addr;
@@ -4795,6 +4801,7 @@ static void drive_machine(conn *c) {
 #else
     static int  use_accept4 = 0;
 #endif
+	
 
     assert(c != NULL);
 
@@ -5078,8 +5085,13 @@ static void drive_machine(conn *c) {
             conn_set_state(c, conn_closing);
             break;
           }
-            switch (transmit(c)) {
+            switch (transmit(c)) {			
             case TRANSMIT_COMPLETE:
+
+                // struct timeval tv;
+                gettimeofday(&tv, NULL);
+                printf("%llu\n", (unsigned long long) (tv.tv_sec * 1000000 + tv.tv_usec));
+                fflush(stdout);
                 if (c->state == conn_mwrite) {
                     conn_release_items(c);
                     /* XXX:  I don't know why this wasn't the general case */
