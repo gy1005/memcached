@@ -4786,7 +4786,7 @@ static int read_into_chunked_item(conn *c) {
 
 static void drive_machine(conn *c) {
     struct timeval tv;
-	if (c->state == 3 || c->state == 4) {		
+	if (c->state == 3) {		
         gettimeofday(&tv, NULL);
         pthread_mutex_lock(&screen_lock);
         printf("start %llu\n", (unsigned long long) (tv.tv_sec * 1000000 + tv.tv_usec));
