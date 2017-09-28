@@ -4785,13 +4785,7 @@ static int read_into_chunked_item(conn *c) {
 }
 
 static void drive_machine(conn *c) {
-    struct timeval tv;
-	if (c->state == 3) {		
-        gettimeofday(&tv, NULL);
-        pthread_mutex_lock(&screen_lock);
-        printf("start %llu\n", (unsigned long long) (tv.tv_sec * 1000000 + tv.tv_usec));
-        pthread_mutex_unlock(&screen_lock);
-	}
+   
 	
 	bool stop = false;
     int sfd;
@@ -4887,6 +4881,14 @@ static void drive_machine(conn *c) {
                 conn_set_state(c, conn_waiting);
                 break;
             case READ_DATA_RECEIVED:
+
+                struct timeval tv;s                		
+                gettimeofday(&tv, NULL);
+                pthread_mutex_lock(&screen_lock);
+                printf("start %llu\n", (unsigned long long) (tv.tv_sec * 1000000 + tv.tv_usec));
+                pthread_mutex_unlock(&screen_lock);
+                
+                
                 conn_set_state(c, conn_parse_cmd);
                 break;
             case READ_ERROR:
