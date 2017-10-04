@@ -4411,6 +4411,10 @@ static int try_read_command(conn *c) {
             /* clear the returned cas value */
             c->cas = 0;
 
+            pthread_mutex_lock(&screen_lock);
+            printf("opcode: %d\n",  c->cmd);
+            pthread_mutex_unlock(&screen_lock);
+
             dispatch_bin_command(c);
 
             c->rbytes -= sizeof(c->binary_header);
@@ -4885,7 +4889,7 @@ static void drive_machine(conn *c) {
                       		
                 gettimeofday(&tv, NULL);
                 pthread_mutex_lock(&screen_lock);
-                printf("start %llu\n", (unsigned long long) (tv.tv_sec * 1000000 + tv.tv_usec));
+                printf("start %llu, ", (unsigned long long) (tv.tv_sec * 1000000 + tv.tv_usec));
                 pthread_mutex_unlock(&screen_lock);
                 
                 
