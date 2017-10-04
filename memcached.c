@@ -4890,7 +4890,7 @@ static void drive_machine(conn *c) {
                 gettimeofday(&tv, NULL);
                 pthread_mutex_lock(&screen_lock);
                 printf("start %llu, ", (unsigned long long) (tv.tv_sec * 1000000 + tv.tv_usec));
-                pthread_mutex_unlock(&screen_lock);
+                // pthread_mutex_unlock(&screen_lock);
                 
                 
                 conn_set_state(c, conn_parse_cmd);
@@ -5102,7 +5102,7 @@ static void drive_machine(conn *c) {
                 gettimeofday(&tv, NULL);
                 pthread_mutex_lock(&screen_lock);
                 printf("end %llu\n", (unsigned long long) (tv.tv_sec * 1000000 + tv.tv_usec));
-                // pthread_mutex_unlock(&screen_lock);
+                pthread_mutex_unlock(&screen_lock);
                 fflush(stdout);
                 if (c->state == conn_mwrite) {
                     conn_release_items(c);
