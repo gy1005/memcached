@@ -4411,7 +4411,7 @@ static int try_read_command(conn *c) {
             /* clear the returned cas value */
             c->cas = 0;
 
-            pthread_mutex_lock(&screen_lock);
+            // pthread_mutex_lock(&screen_lock);
             printf("opcode: %d\n",  c->cmd);
             pthread_mutex_unlock(&screen_lock);
 
@@ -5102,7 +5102,7 @@ static void drive_machine(conn *c) {
                 gettimeofday(&tv, NULL);
                 pthread_mutex_lock(&screen_lock);
                 printf("end %llu\n", (unsigned long long) (tv.tv_sec * 1000000 + tv.tv_usec));
-                pthread_mutex_unlock(&screen_lock);
+                // pthread_mutex_unlock(&screen_lock);
                 fflush(stdout);
                 if (c->state == conn_mwrite) {
                     conn_release_items(c);
